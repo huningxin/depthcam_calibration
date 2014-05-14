@@ -1,2 +1,3 @@
-depthcam_calibration
+Depth and RGB Cameras Calibration Example
 ====================
+
