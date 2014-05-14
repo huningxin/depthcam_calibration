@@ -200,6 +200,10 @@ video {
   width: 100%;
 }
 
+table {
+  width: 100%;
+}
+
 @media screen and (max-width: 650px) {
   h1 {
     font-size: 24px;

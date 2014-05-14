@@ -25,21 +25,36 @@
 <body>
 <div id='container'>
 
-  <h1><a href="https://googlechrome.github.io/webrtc/" title="WebRTC samples homepage">WebRTC samples</a> <span>Select audio &amp; video sources</span></h1>
+  <h1><a href="" title="Depth and RGB Cameras Calibration Example">Depth and RGB Cameras Calibration Example</a></h1>
 
-  <p>Get available audio and video sources from <code>MediaStream.getSources()</code> then set the source for <code>getUserMedia()</code> using a <code>sourceId</code> constraint.</p>
+  <p>Select RGB &amp; Depth video sources and map pixels from Depth to RGB</p>
 
+<table>
+<col style='width:50%;' />
+<col style='width:50%;' />
+<tr>
+<td>
   <div class='select'>
-    <label for='audioSource'>Audio source: </label><select id='audioSource'></select>
+    <label for='rgbSource'>RGB Video source: </label><select id='rgbSource'></select>
   </div>
-
+</td>
+<td>
   <div class='select'>
-    <label for='videoSource'>Video source: </label><select id='videoSource'></select>
+    <label for='depthSource'>Depth Video source: </label><select id='depthSource'></select>
   </div>
+</td>
+</tr>
+<tr>
+<td>
+  <video muted autoplay id='rgbVideo'></video>
+</td>
+<td>
+  <video muted autoplay id='depthVideo'></video>
+</td>
+</tr>
+</table>
 
-  <video muted autoplay></video>
-
- <a href="https://github.com/GoogleChrome/webrtc/tree/gh-pages/samples/web/content/sources" title="View source for this page on Github" id="viewSource">View source on Github</a>
+ <a href="https://github.com/huningxin/depthcam_calibration" title="View source for this page on Github" id="viewSource">View source on Github</a>
 </div>
 
 <script src="main.js"></script>

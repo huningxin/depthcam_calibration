@@ -1,6 +1,7 @@
-var videoElement = document.querySelector("video");
-var audioSelect = document.querySelector("select#audioSource");
-var videoSelect = document.querySelector("select#videoSource");
+var rgbVideoElement = document.querySelector("video#rgbVideo");
+var depthVideoElement = document.querySelector("video#depthVideo");
+var rgbSelect = document.querySelector("select#rgbSource");
+var depthSelect = document.querySelector("select#depthSource");
 var startButton = document.querySelector("button#start");
 
 navigator.getUserMedia = navigator.getUserMedia ||
@@ -9,14 +10,15 @@ navigator.getUserMedia = navigator.getUserMedia ||
 function gotSources(sourceInfos) {
   for (var i = 0; i != sourceInfos.length; ++i) {
     var sourceInfo = sourceInfos[i];
-    var option = document.createElement("option");
-    option.value = sourceInfo.id;
-    if (sourceInfo.kind === 'audio') {
-      option.text = sourceInfo.label || 'microphone ' + (audioSelect.length + 1);
-      audioSelect.appendChild(option);
-    } else if (sourceInfo.kind === 'video') {
-      option.text = sourceInfo.label || 'camera ' + (videoSelect.length + 1);
-      videoSelect.appendChild(option);
+    if (sourceInfo.kind === 'video') {
+      var option = document.createElement("option");
+      option.value = sourceInfo.id;
+      option.text = sourceInfo.label || 'camera ' + (depthSelect.length + 1);
+      depthSelect.appendChild(option);
+      var option1 = document.createElement("option");
+      option1.value = sourceInfo.id;
+      option1.text = sourceInfo.label || 'camera ' + (rgbSelect.length + 1);
+      rgbSelect.appendChild(option1);
     } else {
       console.log('Some other kind of source: ', sourceInfo);
     }
@@ -30,34 +32,52 @@ if (typeof MediaStreamTrack === 'undefined'){
 }
 
 
-function successCallback(stream) {
-  window.stream = stream; // make stream available to console
-  videoElement.src = window.URL.createObjectURL(stream);
+function successCallbackRgb(stream) {
+  window.rgbStream = stream; // make stream available to console
+  rgbVideoElement.src = window.URL.createObjectURL(stream);
+}
+
+function successCallbackDepth(stream) {
+  window.depthStream = stream; // make stream available to console
+  depthVideoElement.src = window.URL.createObjectURL(stream);
 }
 
 function errorCallback(error){
   console.log("navigator.getUserMedia error: ", error);
 }
 
-function start(){
-  if (!!window.stream) {
-    videoElement.src = null;
-    window.stream.stop();
+function startRgb(){
+  if (!!window.rgbStream) {
+    rgbVideoElement.src = null;
+    window.rgbStream.stop();
   }
-  var audioSource = audioSelect.value;
-  var videoSource = videoSelect.value;
-  var constraints = {
-    audio: {
-      optional: [{sourceId: audioSource}]
-    },
+ 
+  var rgbVideoSource = rgbSelect.value;
+  var rgbConstraints = {
     video: {
-      optional: [{sourceId: videoSource}]
+      optional: [{sourceId: rgbVideoSource}]
     }
   };
-  navigator.getUserMedia(constraints, successCallback, errorCallback);
+  navigator.getUserMedia(rgbConstraints, successCallbackRgb, errorCallback);
 }
 
-audioSelect.onchange = start;
-videoSelect.onchange = start;
+function startDepth() {
+  if (!!window.depthStream) {
+    depthVideoElement.src = null;
+    window.depthStream.stop();
+  }
 
-start();
+  var depthVideoSource = depthSelect.value;
+  var depthConstraints = {
+    video: {
+      optional: [{sourceId: depthVideoSource}]
+    }
+  };
+  navigator.getUserMedia(depthConstraints, successCallbackDepth, errorCallback);
+}
+
+rgbSelect.onchange = startRgb;
+depthSelect.onchange = startDepth;
+
+startRgb();
+startDepth();
