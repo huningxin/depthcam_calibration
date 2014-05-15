@@ -4,6 +4,36 @@ var rgbSelect = document.querySelector("select#rgbSource");
 var depthSelect = document.querySelector("select#depthSource");
 var startButton = document.querySelector("button#start");
 
+var uv_canvas = document.getElementById('uv_canvas');
+uv_canvas.width = 640;
+uv_canvas.height = 480;
+var uv_context = uv_canvas.getContext('2d');
+var rgb_canvas = document.createElement('canvas');
+rgb_canvas.width = 640;
+rgb_canvas.height = 480;
+var rgb_context = rgb_canvas.getContext('2d');
+var depth_canvas = document.createElement('canvas');
+depth_canvas.width = 320;
+depth_canvas.height = 240;
+var depth_context = depth_canvas.getContext('2d');
+
+var uvRenderer = new Worker("uv_renderer.js");
+
+uvRenderer.onmessage = function(evt) {
+  uv_context.putImageData(evt.data.uvimage, 0, 0);
+  requestAnimationFrame(postMessage);
+}
+
+function postMessage() {
+  rgb_context.drawImage(rgbVideoElement, 0, 0, rgb_canvas.width, rgb_canvas.height);
+  depth_context.drawImage(depthVideoElement, 0, 0, depth_canvas.width, depth_canvas.height);
+  uvRenderer.postMessage({
+    rgbimage: rgb_context.getImageData(0, 0, rgb_canvas.width, rgb_canvas.height),
+    depthimage: depth_context.getImageData(0, 0, depth_canvas.width, depth_canvas.height),
+    threshold: 700
+  });
+}
+
 navigator.getUserMedia = navigator.getUserMedia ||
   navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
@@ -81,3 +111,7 @@ depthSelect.onchange = startDepth;
 
 startRgb();
 startDepth();
+
+startButton.onclick = function() {
+  requestAnimationFrame(postMessage);
+}

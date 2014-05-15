@@ -9,7 +9,7 @@
 <base target="_blank">
 <title>Select audio and video sources</title>
 <link href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
-<link rel='stylesheet' href='main.css' />
+<!--link rel='stylesheet' href='main.css' /-->
 
   <style>
   div.select {
@@ -30,8 +30,6 @@
   <p>Select RGB &amp; Depth video sources and map pixels from Depth to RGB</p>
 
 <table>
-<col style='width:50%;' />
-<col style='width:50%;' />
 <tr>
 <td>
   <div class='select'>
@@ -52,7 +50,16 @@
   <video muted autoplay id='depthVideo'></video>
 </td>
 </tr>
+<tr>
+<td>
+  <canvas id="uv_canvas"></canvas>
+</td>
+<td>
+</td>
+</tr>
 </table>
+
+ <button id='start'>Start</button>
 
  <a href="https://github.com/huningxin/depthcam_calibration" title="View source for this page on Github" id="viewSource">View source on Github</a>
 </div>
